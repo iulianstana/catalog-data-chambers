@@ -11,6 +11,8 @@
 
 BOT_NAME = 'cdep'
 
+FEED_EXPORT_ENCODING = 'utf-8'
+
 SPIDER_MODULES = ['cdep.spiders']
 NEWSPIDER_MODULE = 'cdep.spiders'
 
