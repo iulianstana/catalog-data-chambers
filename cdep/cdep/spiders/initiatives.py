@@ -7,7 +7,8 @@ class InitiativesSpider(scrapy.Spider):
 
     def start_requests(self):
         urls = [
-            'http://www.cdep.ro/pls/parlam/structura2015.de?leg=2016',
+            'http://www.cdep.ro/pls/parlam/structura2015.de?leg=2016'
+            # 'http://www.cdep.ro/pls/parlam/structura2015.de?leg=2012'
         ]
 
         for url in urls:
@@ -34,8 +35,14 @@ class InitiativesSpider(scrapy.Spider):
         while i < len(title):
             yield {
                 'name': name,
-                'dep': dep[i].xpath('.//text()').extract_first(),
-                'senat': senat[i].xpath('.//text()').extract_first(),
+                'dep': {
+                    'name': dep[i].xpath('.//text()').extract_first(),
+                    'url': response.urljoin(dep[i].xpath('.//a/@href').extract_first())
+                },
+                'senat': {
+                    'name': senat[i].xpath('.//text()').extract_first(),
+                    'url': response.urljoin(senat[i].xpath('.//a/@href').extract_first())
+                },
                 'title': title[i].xpath('.//text()').extract_first(),
                 'status': status[i].xpath('.//text()').extract_first()
             }
