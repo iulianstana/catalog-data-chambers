@@ -5,8 +5,8 @@ import logging
 import cdep.loaders as loaders
 import cdep.items as items
 
-class InitiativesSpider(scrapy.Spider):
-    name = 'initiatives'
+class CameraDeputatilorInitiatives(scrapy.Spider):
+    name = 'CameraDeputatilorInitiatives'
 
     def __init__(self, year = None, years = '', after = 1990):
         logger = logging.getLogger(__name__)
