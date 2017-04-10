@@ -3,6 +3,6 @@
 import scrapy
 
 class InitiativeItem(scrapy.Item):
-    title = scrapy.Field(serializer=str)
+    title = scrapy.Field()
     status = scrapy.Field()
     author = scrapy.Field()

@@ -3,5 +3,5 @@
 import scrapy
 
 class LinkItem(scrapy.Item):
-    title = scrapy.Field(serializer=str)
-    href = scrapy.Field(serializer=str)
+    title = scrapy.Field()
+    href = scrapy.Field()
