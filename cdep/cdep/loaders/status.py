@@ -3,5 +3,8 @@
 from scrapy.loader import ItemLoader
 from scrapy.loader.processors import *
 
+from cdep.helpers import *
+
 class StatusLoader(ItemLoader):
     default_output_processor = TakeFirst()
+    status_in = MapCompose(TextHelper.rws, RomanianHelper.beautify_romanian)
