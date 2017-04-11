@@ -1,9 +1,9 @@
-# -*- coding: utf-8 -*-
-
 import unittest
+import catpol.test as tests
 from scrapy.commands import ScrapyCommand
+import catpol.test.responses
 
-class Command(ScrapyCommand):
+class TestCommand(ScrapyCommand):
     requires_project = True
     default_settings = {'LOG_ENABLED': False}
 
@@ -14,4 +14,12 @@ class Command(ScrapyCommand):
         return 'Testing the project'
 
     def run(self, args, opts):
-        unittest.main()
+        suite = unittest.TestSuite()
+        for r in catpol.test.responses.FrozenResponses.responses():
+            suite.addTest(tests.TestSpiderParser(
+                r['spider'],
+                r['method'],
+                r['response'],
+                r['result']
+            ))
+        unittest.TextTestRunner().run(suite)

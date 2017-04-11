@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import scrapy
 import logging
 
@@ -112,7 +111,7 @@ class CameraDeputatilorInitiatives(scrapy.Spider):
                         cdep[i].xpath('.//a/@href').extract_first()))
                 status_loader.add_value(
                     'camera_deputatilor',
-                    status_cdep_loader.load_item())
+                    dict(status_cdep_loader.load_item()))
 
             if senat[i].xpath('.//a/@href').extract_first():
                 status_senat_loader = loaders.LinkLoader(items.LinkItem())
@@ -125,7 +124,7 @@ class CameraDeputatilorInitiatives(scrapy.Spider):
                         senat[i].xpath('.//a/@href').extract_first()))
                 status_loader.add_value(
                     'senat',
-                    status_senat_loader.load_item())
+                    dict(status_senat_loader.load_item()))
 
             status_loader.add_value(
                 'status',
@@ -137,7 +136,7 @@ class CameraDeputatilorInitiatives(scrapy.Spider):
                 'title',
                 title[i].xpath('.//text()').extract_first())
             loader.add_value('author', author_name)
-            loader.add_value('status', status_loader.load_item())
+            loader.add_value('status', dict(status_loader.load_item()))
             yield loader.load_item()
 
             i += 1
