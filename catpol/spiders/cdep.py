@@ -3,6 +3,7 @@ import logging
 
 import catpol.loaders as loaders
 import catpol.items as items
+import catpol.http as http
 
 class CameraDeputatilorInitiatives(scrapy.Spider):
     name = 'CameraDeputatilorInitiatives'
@@ -62,7 +63,7 @@ class CameraDeputatilorInitiatives(scrapy.Spider):
         }
 
         for url in urls:
-            yield scrapy.Request(url = url, callback = self.parse_ids)
+            yield http.Reqo(url = url, callback = self.parse_ids)
 
     def parse_ids(self, response):
         urls = response.css(
@@ -72,14 +73,14 @@ class CameraDeputatilorInitiatives(scrapy.Spider):
         ).extract()
 
         for url in urls:
-            yield scrapy.Request(
+            yield http.Reqo(
                 url = response.urljoin(url),
                 callback = self.parse_person)
 
     def parse_person(self, response):
         url = response.xpath(
             '//a[text()=\'Initiative legislative\']/@href').extract_first()
-        yield scrapy.Request(
+        yield http.Reqo(
             url = response.urljoin(url),
             callback = self.parse_initiatives)
 

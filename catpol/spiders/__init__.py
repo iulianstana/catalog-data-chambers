@@ -1,1 +1,1 @@
-from catpol.spiders.CameraDeputatilorInitiatives import *
+from catpol.spiders.cdep import *
