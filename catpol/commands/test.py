@@ -20,6 +20,6 @@ class TestCommand(ScrapyCommand):
                 r['spider'],
                 r['method'],
                 r['response'],
-                r['result']
+                r['results']
             ))
         unittest.TextTestRunner().run(suite)

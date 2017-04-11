@@ -28,11 +28,11 @@ def equal_dict(d1, d2):
 
 class TestSpiderParser(unittest.TestCase):
 
-    def __init__(self, spider, method, response, result):
+    def __init__(self, spider, method, response, results):
         self.spider = spider
         self.method = method
         self.response = response
-        self.result = result
+        self.results = results
         super().__init__('runTest')
 
     def runTest(self):
@@ -49,8 +49,9 @@ class TestSpiderParser(unittest.TestCase):
         is_good = True
         for item in method(self.response):
             was = False
-            for result in self.result:
-                was = was or equal_dict(item, result)
+            for result in self.results:
+                continue
+                was = was or (result == item)
                 if was:
                     break
             if not was:
