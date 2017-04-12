@@ -24,17 +24,5 @@ class TestSpiderParser(unittest.TestCase):
         spider_loader = scrapy.spiderloader.SpiderLoader.from_settings(settings)
         spider = spider_loader.load(self.spider)()
         method = getattr(spider, self.method)
-        is_good = True
         for item in method(self.response):
-            was = False
-            for result in self.results:
-                try:
-                    was = was or (result.eqs(item))
-                except AttributeError:
-                    pass
-                if was:
-                    break
-            if not was:
-                is_good = False
-                break
-        self.assertTrue(is_good)
+            self.assertTrue(item in self.results)
