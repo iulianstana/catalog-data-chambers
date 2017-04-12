@@ -7,7 +7,6 @@ import json
 
 import catpol.spiders
 
-from selenium import webdriver
 from scrapy.http import Response
 from urllib.parse import urlparse
 from scrapy.exceptions import UsageError
@@ -69,6 +68,7 @@ class GentestCommand(scrapy.commands.ScrapyCommand):
 
                     # TODO [Owlree]
                     # Thes screenshot part should be factored out.
+                    from selenium import webdriver
                     snap_path = FrozenResponses._directory(url, spider, method)
                     snap_complete_path = os.path.join(
                         snap_path,
