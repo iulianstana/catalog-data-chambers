@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
-
 from scrapy.loader import ItemLoader
-from scrapy.loader.processors import *
+import scrapy.loader.processors as processors
 
-from catpol.helpers import *
+import catpol.helpers as helpers
 
 class StatusLoader(ItemLoader):
-    default_output_processor = TakeFirst()
-    status_in = MapCompose(TextHelper.rws, RomanianHelper.beautify_romanian)
+    default_output_processor = processors.TakeFirst()
+    status_in = processors.MapCompose(helpers.rws, helpers.beautify_romanian)
