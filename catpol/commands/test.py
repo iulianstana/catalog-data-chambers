@@ -15,7 +15,7 @@ class TestCommand(ScrapyCommand):
 
     def run(self, args, opts):
         suite = unittest.TestSuite()
-        for r in catpol.test.responses.FrozenResponses.responses():
+        for r in catpol.test.responses.FrozenResponses.frozen_responses():
             suite.addTest(tests.TestSpiderParser(
                 r['spider'],
                 r['method'],

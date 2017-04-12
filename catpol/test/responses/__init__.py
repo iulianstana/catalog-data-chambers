@@ -5,35 +5,33 @@ import pickle
 class FrozenResponses:
 
     @staticmethod
-    def __directory():
-        d = 'catpol/test/responses/frozen/'
-        snapshot_name = os.path.join(d, '{}/{}/{}/'.format(
-            spider,
-            method,
-            url_filename))
-        return d
+    def _root():
+        return 'catpol/test/responses/frozen/'
 
     @staticmethod
-    def __freeze(obj, fpath, fname):
-        d = FrozenResponses.__directory()
-        snapshot_fpath = os.path.join(d, fpath)
-        snapshot_fname = os.path.join(snapshot_fpath, fname)
+    def _directory(url, spider, method):
+        d = FrozenResponses._root()
+        url_dir = url[url.find('//') + 2:].replace('/', '-')
+        snapshot_name = os.path.join(d, spider, method, url_dir)
+        return snapshot_name
 
-        if not os.path.exists(os.path.dirname(snapshot_fpath)):
+    @staticmethod
+    def _freeze(obj, fpath, fname):
+        complete_path = os.path.join(fpath, fname)
+        if not os.path.exists(os.path.dirname(complete_path)):
             try:
-                os.makedirs(os.path.dirname(snapshot_fpath))
+                os.makedirs(os.path.dirname(complete_path))
             except OSError as exc:
                 if exc.errno != errno.EEXIST:
                     raise
-
         with open(
-            snapshot_fname, 'wb'
-        ) as output:
-            pickle.dump(obj, output, pickle.HIGHEST_PROTOCOL)
+            complete_path, 'wb'
+        ) as f:
+            pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
 
     @staticmethod
-    def responses():
-        d = 'catpol/test/responses/frozen'
+    def frozen_responses():
+        d = FrozenResponses._root()
         for root, dirs, files in os.walk(d):
             if root.count('/') == d.count('/') + 3:
                 d_response = os.path.join(root, 'response.pkl')
@@ -51,3 +49,13 @@ class FrozenResponses:
                     'spider': spider,
                     'method': method
                 }
+
+    @staticmethod
+    def freeze_response(response, url, spider, method):
+        frozen_dir = FrozenResponses._directory(url, spider, method)
+        FrozenResponses._freeze(response, frozen_dir, 'response.pkl')
+
+    @staticmethod
+    def freeze_results(results, url, spider, method):
+        frozen_dir = FrozenResponses._directory(url, spider, method)
+        FrozenResponses._freeze(results, frozen_dir, 'results.pkl')
