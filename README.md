@@ -10,7 +10,7 @@ If you use _pip_, we put in a *requirements.txt* and a *requirements_dev.txt* fi
 
 ## Instructions
 
-We recommend you use *pip* and *virtualenv* to setup your environment. Shall you decide to use *pip*, just do `pip install -r requirements.txt`, this should install *Scrapy 1.3.3*. You can run the spider with `scrapy crawl CameraDeputatilorInitiatives`.
+We recommend you use *pip* and *virtualenv* to setup your environment. Shall you decide to use *pip*, just do `pip install -r requirements.txt`, this should install *Scrapy 1.3.3*. You can run the spider with `scrapy crawl CameraDeputatilorInitiatives`. Be careful to use *Python 3*. Also, on some systems, *pip* for *Python 3* is named *pip3*.
 
 ## Commands
 
