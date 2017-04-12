@@ -6,7 +6,7 @@ class FrozenResponses:
 
     @staticmethod
     def _root():
-        return 'catpol/test/responses/frozen/'
+        return 'catpol/test/responses/frozen'
 
     @staticmethod
     def _directory(url, spider, method):
