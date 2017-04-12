@@ -7,12 +7,11 @@ import json
 
 import catpol.spiders
 
-from copy import deepcopy
 from selenium import webdriver
+from scrapy.http import Response
 from urllib.parse import urlparse
 from scrapy.exceptions import UsageError
-from catpol.test.responses import *
-from scrapy.http import Response
+from catpol.test.responses import FrozenResponses
 
 class GentestCommand(scrapy.commands.ScrapyCommand):
 
