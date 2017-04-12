@@ -111,7 +111,7 @@ class CameraDeputatilorInitiatives(scrapy.Spider):
                     response.urljoin(
                         cdep[i].xpath('.//a/@href').extract_first()))
                 status_loader.add_value(
-                    'camera_deputatilor',
+                    'cdep',
                     dict(status_cdep_loader.load_item()))
 
             if senat[i].xpath('.//a/@href').extract_first():
