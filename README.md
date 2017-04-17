@@ -17,9 +17,7 @@ We recommend you use *pip* and *virtualenv* to setup your environment.
   2. `brew install python3`
   3. `pip3 install virtualenv`
 - Ubuntu (tested on 16.04 LTS)
-  1. `sudo apt-get update`
-  2. `sudo apt-get install python3 pip3`
-  3. `pip3 install virtualenv`
+  1. `pip3 install virtualenv`
 
 The following should be common on both:
 1. `git clone https://github.com/code4romania/catalog-data-chambers`
