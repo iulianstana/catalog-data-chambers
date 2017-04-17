@@ -10,7 +10,24 @@ If you use _pip_, we put in a *requirements.txt* and a *requirements_dev.txt* fi
 
 ## Instructions
 
-We recommend you use *pip* and *virtualenv* to setup your environment. Shall you decide to use *pip*, just do `pip install -r requirements.txt`, this should install *Scrapy 1.3.3*. You can run the spider with `scrapy crawl CameraDeputatilorInitiatives`. Be careful to use *Python 3*. Also, on some systems, *pip* for *Python 3* is named *pip3*.
+We recommend you use *pip* and *virtualenv* to setup your environment.
+
+- macOS (tested on 10.12)
+  1. Install [homebrew](https://brew.sh).
+  2. `brew install python3`
+  3. `pip3 install virtualenv`
+- Ubuntu (tested on 16.04 LTS)
+  1. `pip3 install virtualenv`
+
+The following should be common on both:
+1. `git clone https://github.com/code4romania/catalog-data-chambers`
+2. `cd catalog-data-chambers`
+3. `virtualenv -p python3 cdc_env`
+4. `source cdc_env/bin/activate`
+5. `pip install -r requirements.txt`
+7. `scrapy crawl CameraDeputatilorInitiatives -a year=2016 -o 2016.json`
+
+These instructions are tested and work in the systems specified, but they do not have to be exacuted as given. You can customize your setup to suit your needs.
 
 ## Commands
 
@@ -38,7 +55,7 @@ You can use _after_ to crawl only cycles that began in or after a given year.
 
 ###### Example
 
-Say you want to crawl all the initiatives from 20012 to present, to accomplish this you can use `scrapy crawl CameraDeputatilorInitiatives -a after=2012`.
+Say you want to crawl all the initiatives from 2012 to present, to accomplish this you can use `scrapy crawl CameraDeputatilorInitiatives -a after=2012`.
 
 ### Testing commands
 
