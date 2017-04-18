@@ -3,7 +3,6 @@ import logging
 
 from scrapy.conf import settings
 from scrapy.exceptions import DropItem
-from scrapy import log
 
 class MongoDBPipeline(object):
     def __init__(self):
