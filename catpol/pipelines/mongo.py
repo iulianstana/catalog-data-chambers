@@ -1,6 +1,5 @@
 import pymongo
 import logging
-import datetime
 
 from scrapy.conf import settings
 from scrapy.exceptions import DropItem
