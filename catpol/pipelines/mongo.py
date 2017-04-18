@@ -11,7 +11,6 @@ class MongoDBPipeline(object):
         if 'MONGODB_URI' in settings:
             conn = pymongo.MongoClient(settings['MONGODB_URI'])
             db = conn.get_default_database()
-
             if settings['MONGODB_COLLECTION']:
                 self.collection = db[settings['MONGODB_COLLECTION']]
                 self.obj_id = self.collection.insert({'documents': []})
