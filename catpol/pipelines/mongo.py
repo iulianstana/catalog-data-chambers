@@ -7,6 +7,7 @@ from scrapy import log
 
 class MongoDBPipeline(object):
     def __init__(self):
+        logger = logging.getLogger(__name__)
         client = pymongo.MongoClient(
             settings['MONGODB_SERVER'],
             settings['MONGODB_PORT']
