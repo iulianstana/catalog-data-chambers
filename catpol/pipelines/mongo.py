@@ -16,9 +16,11 @@ class MongoDBPipeline(object):
 
     def process_item(self, item, spider):
         if self.collection:
+            d = dict(item)
+            d['spider'] = spider.name
             self.collection.update(
                 {'_id': self.obj_id},
-                {'$push': {'documents': dict(item)}})
+                {'$push': {'documents': d}})
             logger = logging.getLogger(__name__)
             logger.debug('Added item to mongo database')
         return item
