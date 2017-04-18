@@ -9,5 +9,5 @@ COMMANDS_MODULE = 'catpol.commands'
 
 ITEM_PIPELINES = {'catpol.pipelines.MongoDBPipeline': 300}
 
-# MONGODB_URI = 'mongodb://<username>:pass@localhost:27017/db'
+# MONGODB_URI = 'mongodb://<username>:<pass>@localhost:27017/db'
 # MONGODB_COLLECTION = 'collection'
