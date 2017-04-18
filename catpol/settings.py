@@ -9,11 +9,5 @@ COMMANDS_MODULE = 'catpol.commands'
 
 ITEM_PIPELINES = {'catpol.pipelines.MongoDBPipeline': 300}
 
-MONGODB_SERVER = 'localhost'
-MONGODB_PORT = 27017 
-MONGODB_DB = 'catalog'
-MONGODB_COLLECTION = 'collection'
-MONGODB_USER = 'user'
-MONGODB_PASS = 'pass'
-MONGODB_SOURCE = None
-MONGODB_MECH = 'SCRAM-SHA-1'
+# MONGODB_URI = 'mongodb://cdc:cucurigi@ds043714.mlab.com:43714/catalog'
+# MONGODB_COLLECTION = 'collection'
