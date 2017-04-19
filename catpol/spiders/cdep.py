@@ -5,10 +5,11 @@ import catpol.loaders as loaders
 import catpol.items as items
 import catpol.http as http
 
+
 class CameraDeputatilorInitiatives(scrapy.Spider):
     name = 'CameraDeputatilorInitiatives'
 
-    def __init__(self, year = None, years = '', after = 1990):
+    def __init__(self, year=None, years='', after=1990):
         logger = logging.getLogger(__name__)
         self.years = {}
         all_years = {2016, 2012, 2008, 2004, 2000, 1996, 1992, 1990}
@@ -59,11 +60,11 @@ class CameraDeputatilorInitiatives(scrapy.Spider):
     def start_requests(self):
         urls = {
             'http://www.cdep.ro/pls/parlam/structura2015.de?leg={}'
-                .format(year) for year in self.years
+            .format(year) for year in self.years
         }
 
         for url in urls:
-            yield http.Reqo(url = url, callback = self.parse_ids)
+            yield http.Reqo(url=url, callback=self.parse_ids)
 
     def parse_ids(self, response):
         urls = response.css(
@@ -74,15 +75,15 @@ class CameraDeputatilorInitiatives(scrapy.Spider):
 
         for url in urls:
             yield http.Reqo(
-                url = response.urljoin(url),
-                callback = self.parse_person)
+                url=response.urljoin(url),
+                callback=self.parse_person)
 
     def parse_person(self, response):
         url = response.xpath(
             '//a[text()=\'Initiative legislative\']/@href').extract_first()
         yield http.Reqo(
-            url = response.urljoin(url),
-            callback = self.parse_initiatives)
+            url=response.urljoin(url),
+            callback=self.parse_initiatives)
 
     def parse_initiatives(self, response):
         author_name = response.css(
@@ -91,9 +92,9 @@ class CameraDeputatilorInitiatives(scrapy.Spider):
 
         rows = response.css(
             'div.grup-parlamentar-list.grupuri-parlamentare-list tbody tr')
-        cdep   = rows.css('td:nth-child(2)')
-        senat  = rows.css('td:nth-child(3)')
-        title  = rows.css('td:nth-child(4)')
+        cdep = rows.css('td:nth-child(2)')
+        senat = rows.css('td:nth-child(3)')
+        title = rows.css('td:nth-child(4)')
         status = rows.css('td:nth-child(5)')
 
         i = 0
