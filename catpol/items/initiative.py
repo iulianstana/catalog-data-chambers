@@ -1,6 +1,5 @@
-import json
 import scrapy
-import hashlib
+
 
 class InitiativeItem(scrapy.Item):
     title = scrapy.Field()
