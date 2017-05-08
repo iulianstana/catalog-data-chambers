@@ -6,10 +6,10 @@ import catpol.items as items
 import catpol.http as http
 
 
-class CameraDeputatilorInitiatives(scrapy.Spider):
-    name = 'CameraDeputatilorInitiatives'
+class Cdep(scrapy.Spider):
+    name = 'cdep'
 
-    def __init__(self, year=None, years='', after=1990):
+    def __init__(self, year=None, years='', after=1990, entities='inits activs'):
         logger = logging.getLogger(__name__)
         self.years = {}
         all_years = {2016, 2012, 2008, 2004, 2000, 1996, 1992, 1990}
@@ -56,6 +56,9 @@ class CameraDeputatilorInitiatives(scrapy.Spider):
                                 all_years_str))
         else:
             self.years = {year for year in all_years if year >= int(after)}
+        entities = entities.split()
+        self.should_parse_initiatives = 'inits' in entities
+        self.should_parse_activities = 'activs' in entities
 
     def start_requests(self):
         urls = {
@@ -79,11 +82,43 @@ class CameraDeputatilorInitiatives(scrapy.Spider):
                 callback=self.parse_person)
 
     def parse_person(self, response):
-        url = response.xpath(
-            '//a[text()=\'Initiative legislative\']/@href').extract_first()
-        yield http.Reqo(
-            url=response.urljoin(url),
-            callback=self.parse_initiatives)
+
+        should_parse_activities = True
+        if hasattr(self, 'should_parse_activities') and self.should_parse_activities == False:
+            should_parse_activities = False
+
+        if should_parse_activities:
+            div_text = 'Activitatea parlamentara în cifre'
+            activity_rows = response.xpath(
+                '//text()[contains(.,\'{}\')]/../../table/tr'.format(div_text)
+            )
+
+            activity_loader = loaders.ActivityLoader(items.ActivityItem())
+            activity_dict = dict()
+            for row in activity_rows:
+                columns = row.xpath('.//td')
+                if len(columns) == 2:
+                    key = ''.join(columns[0].xpath('.//text()').extract()).strip(':')
+                    value = ''.join(columns[1].xpath('.//text()').extract())
+                    activity_dict[key] = value
+            activity_loader.add_value('dictionary', activity_dict)
+
+            person_name = response.css(
+                'div.profile-dep div.boxTitle h1::text'
+            ).extract_first()
+            activity_loader.add_value('name', person_name)
+            yield activity_loader.load_item()
+
+        should_parse_initiatives = True
+        if hasattr(self, 'should_parse_inivitatives') and self.should_parse_initiatives == False:
+            should_parse_initiatives = False
+
+        if should_parse_initiatives:
+            url = response.xpath(
+                '//a[text()=\'Initiative legislative\']/@href').extract_first()
+            yield http.Reqo(
+                url=response.urljoin(url),
+                callback=self.parse_initiatives)
 
     def parse_initiatives(self, response):
         author_name = response.css(

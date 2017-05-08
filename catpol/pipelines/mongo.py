@@ -27,4 +27,3 @@ class MongoDBPipeline(object):
             logger = logging.getLogger(__name__)
             logger.debug('Added item to mongo database')
         return item
-        
