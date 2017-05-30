@@ -4,7 +4,7 @@
 
 The project is part of [*Catalog Politic*](https://code4.ro/en/project/catalog-politic/), an online platform that centralizes existing information about persons in public functions in Romania.
 
-Here we tackle the problem of gathering the data available on the internet in a semi-structured form. We use Python and Scrapy to crawl and parse the web, after which we dump the data in a MongoDB database. Please keep in mind that this project is in a very early stage, and thus some of the features are still experimental.
+Here we tackle the problem of gathering the data available on the internet in a semi-structured form. We use Python and Scrapy to crawl and parse the web, after which we dump the data in a MongoDB database. Please keep in mind that this project is in a very early stage, and thus some of the features are still experimental. Also, the architecture is also subject to change, since we want to be in sync as much as possible with our other similar projects, like [*CZL Scrape*](https://github.com/code4romania/czl-scrape), part of [*Ce Zice Legea*](https://code4.ro/en/proiect/ce-zice-legea/).
 
 ## Requirements
 
