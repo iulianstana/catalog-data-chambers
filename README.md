@@ -2,7 +2,7 @@
 
 ![Code for Romania Logo](https://i.imgur.com/hobixRP.png)
 
-The project is part of [*Catalog Politic*](https://code4.ro/en/project/catalog-politic/), an online platform that centralizes existing information about persons in public function in Romania.
+The project is part of [*Catalog Politic*](https://code4.ro/en/project/catalog-politic/), an online platform that centralizes existing information about persons in public functions in Romania.
 
 Here we tackle the problem of gathering the data available on the internet in a semi-structuring form. We use Python and Scrapy to crawl and parse the web, after which we dump the data in a MongoDB database. Please keep in mind that this project is in a very early stage, and thus some of the features are still experimental.
 
