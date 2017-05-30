@@ -1,6 +1,10 @@
-# catalog-data-chambers
+# *Catalog Politic* Data Chambers
 
-This is a Python 3 + Scrapy crawling / web scraping application. Momentarily, there is only one spider (accordingly named *CameraDeputatilorInitiatives*) which crawls the website [wwww.cdep.ro](http://www.cdep.ro) and gathers data about the legal initiatives of all the deputies whose profiles are available on the website.
+![Code for Romania Logo](https://i.imgur.com/hobixRP.png)
+
+The project is part of [*Catalog Politic*](https://code4.ro/en/project/catalog-politic/), an online platform that centralizes existing information about persons in public function in Romania.
+
+Here we tackle the problem of gathering the data available on the internet in a semi-structuring form. We use Python and Scrapy to crawl and parse the web, after which we dump the data in a MongoDB database. Please keep in mind that this project is in a very early stage, and thus some of the features are still experimental.
 
 ## Requirements
 
@@ -17,7 +21,7 @@ We recommend you use *pip* and *virtualenv* to setup your environment.
   2. `brew install python3`
   3. `pip3 install virtualenv`
 - Ubuntu (tested on 16.04 LTS)
-  1. `sudo apt-get install python3-pip`
+  1. `sudo apt-get install python3-pip libssl-dev`
   2. `pip3 install virtualenv`
 
 The following should be common on both:
@@ -28,7 +32,7 @@ The following should be common on both:
 5. `pip install -r requirements.txt`
 7. `scrapy crawl CameraDeputatilorInitiatives -a year=2016 -o 2016.json`
 
-These instructions are tested and work in the systems specified, but they do not have to be exacuted as given. You can customize your setup to suit your needs.
+These instructions are verified to work on the specified systems, but they do not have to be exacuted as given. You can customize your setup to suit your needs.
 
 ## Commands
 
@@ -58,12 +62,24 @@ You can use _after_ to crawl only cycles that began in or after a given year.
 
 Say you want to crawl all the initiatives from 2012 to present, to accomplish this you can use `scrapy crawl CameraDeputatilorInitiatives -a after=2012`.
 
+#### entities
+
+You can use the _entities_ command to only crawl specified types of entities.
+
+###### Example
+
+Say you only want to crawl how much the character spent talking in plenery, to accomplish this you can use `scrapy crawl CameraDeputatilorInitiatives -a entities=plenery_time`.
+
 ### Testing commands
 
 If you want to make sure the spider still yields the same values and request on our set of input data, you can run `scrapy test`.
 
-### Generating tests
+### Generating tests (experimental!)
 
 Sometimes you find edge cases like weird characters, unexpected elements, and so on. After you fix the problem, you want to ensure that in the future the spider does not fail on these edge cases again. For this we developed an automatic test generation tool. You can generate a test by running `scrapy gentest <url> <spider> <method>`. The URL tells the generator what page to save a local HTML snapshot and spider results of. The other arguments specify the spider and the method of the spider which should parse the response and be used to generate the test answer. Frozen tests responses and results are saved in [the frozen directory](test/responses/frozen). When you generate a test, the generator also saves a .png screenshot of the website, so you can reference it later should the need arise.
 
  **Right now there is no proper method to manage these tests, but we are working on it.** However, you can update a test by regenerating with the same URL, spider, and method. You can also delete it directly from [the frozen directory](test/responses/frozen).
+
+### How to contribute
+
+Check out our [issues page](https://github.com/code4romania/catalog-data-chambers/issues). We regularly want to gather more data and do other changes. Your help is welcome! If you found an issue you would like to tackle, just post a short message about how you want to solve it (if the task is small enough, this might not be needed). If you have any problems with the setup or with understanding our architecture, don't hesitate to contact us!
