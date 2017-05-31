@@ -1,7 +1,7 @@
 import scrapy
 
 
-class ActivityItem(scrapy.Item):
+class PleneryTimeItem(scrapy.Item):
     name = scrapy.Field()
-    dictionary = scrapy.Field()
+    duration = scrapy.Field()
     url = scrapy.Field()
