@@ -12,7 +12,6 @@ class Cdep(scrapy.Spider):
 
     def __init__(self, after=None, years=None):
         self.years = cmdinput.expand_years(after, years)
-        print(self.years)
 
     def start_requests(self):
         urls = {
@@ -49,12 +48,15 @@ class Cdep(scrapy.Spider):
             'div.profile-dep div.boxTitle h1::text'
         ).extract_first()
 
+        # parse birthdate
+        birthdate = ''.join(response.css('div.profile-dep div.profile-pic-dep::text').extract()).strip()
+
         # parse parliamentary activity summary
         div_text = 'Activitatea parlamentara în cifre'
         activity_rows = response.xpath(
             '//text()[contains(.,\'{}\')]/../../table/tr'.format(div_text)
         )
-        activity_loader = loaders.ActivityLoader(items.ActivityItem())
+        personal_data_loader = loaders.PersonalDataLoader(items.PersonalDataItem())
         activity_dict = dict()
         for row in activity_rows:
             columns = row.xpath('.//td')
@@ -63,10 +65,11 @@ class Cdep(scrapy.Spider):
                     './/text()').extract()).strip(':')
                 value = ''.join(columns[1].xpath('.//text()').extract())
                 activity_dict[key] = value
-        activity_loader.add_value('dictionary', activity_dict)
-        activity_loader.add_value('name', person_name)
-        activity_loader.add_value('url', response.url)
-        yield activity_loader.load_item()
+        personal_data_loader.add_value('activity', activity_dict)
+        personal_data_loader.add_value('name', person_name)
+        personal_data_loader.add_value('birthdate', birthdate)
+        personal_data_loader.add_value('url', response.url)
+        yield personal_data_loader.load_item()
 
         # follow plenery speaking url
         field_name = 'Luari de cuvânt:'
