@@ -4,7 +4,7 @@ import scrapy.loader.processors as processors
 import catpol.helpers as helpers
 
 
-class ActivityLoader(ItemLoader):
+class PersonalDataLoader(ItemLoader):
     default_output_processor = processors.TakeFirst()
     name_in = processors.MapCompose(helpers.rws, helpers.beautify_romanian)
-    dictionary_in = processors.Identity()
+    activity_in = processors.Identity()
