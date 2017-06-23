@@ -72,6 +72,10 @@ Say you only want to crawl how much the character spent talking in plenery, to a
 
 ### Spider commands (*cdep_voting*)
 
+#### after
+
+Crawl all years starting from this year. If this argument is provided, all others will be ignored.
+
 #### year
 
 Year to crawl. If no month and day specified, it will crawl every day of every month (for which it finds activity)
@@ -88,6 +92,7 @@ Day to crawl.
 
 `scrapy crawl cdep_voting -a year=2017 -a month=6 -a day=20`
 
+`scrapy crawl cdep_voting -a after=2006`
 
 ### Testing commands
 
