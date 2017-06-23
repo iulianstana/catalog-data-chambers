@@ -70,6 +70,30 @@ You can use the _entities_ command to only crawl specified types of entities.
 
 Say you only want to crawl how much the character spent talking in plenery, to accomplish this you can use `scrapy crawl CameraDeputatilorInitiatives -a entities=plenery_time`.
 
+### Spider commands (*cdep_voting*)
+
+#### after
+
+Crawl all years starting from this year. If this argument is provided, all others will be ignored.
+
+#### year
+
+Year to crawl. If no month and day specified, it will crawl every day of every month (for which it finds activity)
+
+#### month
+
+Month to crawl. If no day specified, it will crawl every day of that month (for which it finds activity)
+
+#### day
+
+Day to crawl. 
+
+#### Example
+
+`scrapy crawl cdep_voting -a year=2017 -a month=6 -a day=20`
+
+`scrapy crawl cdep_voting -a after=2006`
+
 ### Testing commands
 
 If you want to make sure the spider still yields the same values and request on our set of input data, you can run `scrapy test`.
