@@ -127,5 +127,5 @@ class CdepVoting(scrapy.Spider):
                 votes_loader.add_value('party', vote['GRUP'])
                 votes_loader.add_value('vote', vote['VOT'])
                 votes_list.append(votes_loader.load_item())
-            voting_loader.add_value('votes', {'people' : votes_list})
+            voting_loader.add_value('votes', votes_list)
         yield voting_loader.load_item()
