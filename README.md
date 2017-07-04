@@ -30,29 +30,21 @@ The following should be common on both:
 3. `virtualenv -p python3 cdc_env`
 4. `source cdc_env/bin/activate`
 5. `pip install -r requirements.txt`
-7. `scrapy crawl CameraDeputatilorInitiatives -a year=2016 -o 2016.json`
+7. `scrapy crawl cdep -a years=2016 -o 2016.json`
 
 These instructions are verified to work on the specified systems, but they do not have to be exacuted as given. You can customize your setup to suit your needs.
 
 ## Commands
 
-### Spider commands (*CameraDeputatilorInitiatives*)
-
-#### year
-
-An election cycle lasts 4 year and is named by the year in which it started. For example, we name the 2008–2016 cycle *the 2008 cycle*. You can use this command to crawl a specific cycle.
-
-###### Example
-
-Say you only want to crawl the 2000 cycle (this means initiatives between 2000 and 2004). For this you can use `scrapy crawl CameraDeputatilorInitiatives -a year=2000`.
+### Spider commands (*cdep*)
 
 #### years
 
-The same as year, but you can have multiple cycles.
+An election cycle lasts 4 year and is named by the year in which it started. For example, we name the 2008–2016 cycle *the 2008 cycle*. You can use this command to crawl specific cycles.
 
 ###### Example
 
-Say you want to crawl the initiatives between 2004 and 2012. This period is made up of two cycles: 2004 and 2008. To accomplish this you can use `scrapy crawl CameraDeputatilorInitiatives -a years='2004 2008'`.
+Say you want to crawl the initiatives between 2004 and 2012. This period is made up of two cycles: 2004 and 2008. To accomplish this you can use `scrapy crawl cdep -a years='2004 2008'`.
 
 #### after
 
@@ -60,15 +52,7 @@ You can use _after_ to crawl only cycles that began in or after a given year.
 
 ###### Example
 
-Say you want to crawl all the initiatives from 2012 to present, to accomplish this you can use `scrapy crawl CameraDeputatilorInitiatives -a after=2012`.
-
-#### entities
-
-You can use the _entities_ command to only crawl specified types of entities.
-
-###### Example
-
-Say you only want to crawl how much the character spent talking in plenery, to accomplish this you can use `scrapy crawl CameraDeputatilorInitiatives -a entities=plenery_time`.
+Say you want to crawl all the initiatives from 2012 to present, to accomplish this you can use `scrapy crawl cdep -a after=2012`.
 
 ### Spider commands (*cdep_voting*)
 
