@@ -10,11 +10,6 @@ import catpol.http as http
 
 class CdepVoting(scrapy.Spider):
     name = 'cdep_voting'
-    year = None
-    month = None
-    day = None
-    crawl_day = False
-    crawl_year = False
 
     def __init__(self, year=None, month=None, day=None, after=None):
         logger = logging.getLogger(__name__)
@@ -22,6 +17,8 @@ class CdepVoting(scrapy.Spider):
         self.month = month
         self.day = day
         self.after = after
+        self.crawl_year = False
+        self.crawl_day = False
 
         if year:
             if month:
