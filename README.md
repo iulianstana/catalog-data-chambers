@@ -23,14 +23,18 @@ We recommend you use *pip* and *virtualenv* to setup your environment.
 - Ubuntu (tested on 16.04 LTS)
   1. `sudo apt-get install python3-pip libssl-dev`
   2. `pip3 install virtualenv`
+- Windows (tested on 8.1)
+  1. `pip install virtualenv`
+  2. steps 1-5 below
+  3. `pip install pypiwin32`
 
-The following should be common on both:
+The following should be common:
 1. `git clone https://github.com/code4romania/catalog-data-chambers`
 2. `cd catalog-data-chambers`
 3. `virtualenv -p python3 cdc_env`
 4. `source cdc_env/bin/activate`
 5. `pip install -r requirements.txt`
-7. `scrapy crawl cdep -a years=2016 -o 2016.json`
+6. `scrapy crawl cdep -a years=2016 -o 2016.json`
 
 These instructions are verified to work on the specified systems, but they do not have to be exacuted as given. You can customize your setup to suit your needs.
 
