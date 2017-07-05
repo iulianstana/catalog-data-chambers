@@ -7,3 +7,4 @@ import catpol.helpers as helpers
 class VotingLoader(ItemLoader):
     default_output_processor = processors.TakeFirst()
     description_in = processors.MapCompose(helpers.rws, helpers.beautify_romanian)
+    votes_out = processors.Identity()
