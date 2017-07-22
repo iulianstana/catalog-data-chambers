@@ -6,3 +6,6 @@ class PersonalDataItem(scrapy.Item):
     birthdate = scrapy.Field()
     activity = scrapy.Field()
     url = scrapy.Field()
+    eurogroup = scrapy.Field()
+    birthplace = scrapy.Field()
+    party = scrapy.Field()
