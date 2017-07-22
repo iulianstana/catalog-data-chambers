@@ -8,3 +8,4 @@ class PersonalDataItem(scrapy.Item):
     url = scrapy.Field()
     eurogroup = scrapy.Field()
     birthplace = scrapy.Field()
+    party = scrapy.Field()

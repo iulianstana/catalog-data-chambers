@@ -29,11 +29,15 @@ class EuroSpider(scrapy.Spider):
 
         for dude in romania:
             url = response.urljoin(dude['detailUrl'])
-            yield http.Reqo(url=url, callback=self.parse_detail)
+            req = http.Reqo(url=url, callback=self.parse_detail)
+            req.meta['party'] = dude['nationalPoliticalGroupLabel']
+            yield req
 
     def parse_detail(self, response):
         personal_data_loader = loaders.PersonalDataLoader(
                                                        items.PersonalDataItem())
+
+        personal_data_loader.add_value('party', response.meta['party'])
 
         name = ' '.join(response.css('.mep_name').xpath('.//text()').extract()
                                                                        ).strip()
