@@ -9,6 +9,12 @@ import catpol.http as http
 
 class EuroSpider(scrapy.Spider):
 
+    """www.europarl.europa.eu
+
+    ITEMS CRAWLED:
+    - personal_data: birthdate, name, url
+    """
+
     name = 'euro'
 
     def start_requests(self):
