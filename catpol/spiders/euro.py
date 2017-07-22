@@ -47,7 +47,12 @@ class EuroSpider(scrapy.Spider):
 
         if cln >= 0 and cm >= 0:
             bday = more_info[cln + 1:cm].strip()
+            bplace = more_info[cm + 1:].strip()
             personal_data_loader.add_value('birthdate', bday)
+            personal_data_loader.add_value('birthplace', bplace)
+
+        group = response.css('li.group::text').extract_first().strip()
+        personal_data_loader.add_value('eurogroup', group)
 
         personal_data_loader.add_value('url', response.url)
 
