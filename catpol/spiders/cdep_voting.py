@@ -7,8 +7,6 @@ import catpol.loaders as loaders
 import catpol.items as items
 import catpol.http as http
 
-from bs4 import BeautifulSoup as soup
-
 
 class CdepVoting(scrapy.Spider):
     name = 'cdep_voting'
@@ -123,21 +121,21 @@ class CdepVoting(scrapy.Spider):
     def parse_vote(self, response):
         voting_loader = response.meta['voting_loader']
         if response.body:
-            root = soup(response.body, 'html.parser')
-            voting_table = root.find_all('table')[-1]
+
+            votes = response.css('#olddiv > table:nth-child(5) tr')
             votes_list = []
             vote_id = response.meta['vote_id']
-            header = True
-            for vote in voting_table.find_all('tr'):
-                if header:
-                    header = False
+            header = 0
+            for vote in votes:
+                if header < 2:
+                    header += 1
                     continue
-
-                person_url = 'http://www.cdep.ro' + vote.find_all('td')[1].find('a')['href']
-                person = vote.find_all('td')[1].find('a').text
-                party = vote.find_all('td')[2].text
-                vote_val = vote.find_all('td')[3].text.strip()
-
+                person_url = 'http://www.cdep.ro' + vote.css('td:nth-child(2) a::attr(href)').extract_first()
+                person = vote.css('td:nth-child(2) a::text').extract_first()
+                party = vote.css('td:nth-child(3)::text').extract_first()
+                vote_val = vote.css('td:nth-child(4)::text').extract_first()
+                if vote_val:
+                    vote_val = vote_val.strip()
                 votes_loader = loaders.VotesLoader(items.VotesItem())
                 votes_loader.add_value('vote_id', vote_id)
                 votes_loader.add_value('person', person)
