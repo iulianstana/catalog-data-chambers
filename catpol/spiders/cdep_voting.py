@@ -107,13 +107,45 @@ class CdepVoting(scrapy.Spider):
                 voting_loader.add_value('vote_no', vote.get('AU_VOTAT_NU',''))
                 voting_loader.add_value('vote_ab', vote.get('AU_VOTAT_AB',''))
 
+                # url = str(
+                #     'http://www.cdep.ro/pls/steno/evot2015.xml?'
+                #     'par1=2&par2='+vote['VOTID']
+                # )
                 url = str(
-                    'http://www.cdep.ro/pls/steno/evot2015.xml?'
-                    'par1=2&par2='+vote['VOTID']
+                    'http://www.cdep.ro/pls/steno/evot2015.Nominal?'
+                    'idv='+vote['VOTID']
                 )
-                yield http.Reqo(url=url, callback=self.parse_vote, meta={'voting_loader': voting_loader})
+                yield http.Reqo(url=url, callback=self.parse_vote, meta={'voting_loader': voting_loader, 'vote_id': vote['VOTID']})
 
     def parse_vote(self, response):
+        voting_loader = response.meta['voting_loader']
+        if response.body:
+
+            votes = response.css('#olddiv > table:nth-child(5) tr')
+            votes_list = []
+            vote_id = response.meta['vote_id']
+            header = 0
+            for vote in votes:
+                if header < 2:
+                    header += 1
+                    continue
+                person_url = 'http://www.cdep.ro' + vote.css('td:nth-child(2) a::attr(href)').extract_first()
+                person = vote.css('td:nth-child(2) a::text').extract_first()
+                party = vote.css('td:nth-child(3)::text').extract_first()
+                vote_val = vote.css('td:nth-child(4)::text').extract_first()
+                if vote_val:
+                    vote_val = vote_val.strip()
+                votes_loader = loaders.VotesLoader(items.VotesItem())
+                votes_loader.add_value('vote_id', vote_id)
+                votes_loader.add_value('person', person)
+                votes_loader.add_value('person_url', person_url)
+                votes_loader.add_value('party', party)
+                votes_loader.add_value('vote', vote_val)
+                votes_list.append(votes_loader.load_item())
+            voting_loader.add_value('votes', votes_list)
+        yield voting_loader.load_item()
+
+    def parse_vote_xml(self, response):
         voting_loader = response.meta['voting_loader']
         if response.body:
             response_dict = xmltodict.parse(response.body)
