@@ -85,7 +85,6 @@ class CdepVoting(scrapy.Spider):
     def parse_month(self, response):
         for day in response.body.decode().split(','):
             if day:
-                print(day)
                 url = str(
                         'http://www.cdep.ro/pls/steno/evot2015.xml?'
                         'par1=1&par2='+day
