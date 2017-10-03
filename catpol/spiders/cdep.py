@@ -48,6 +48,12 @@ class Cdep(scrapy.Spider):
             'div.profile-dep div.boxTitle h1::text'
         ).extract_first()
 
+        # parse profile picture src
+        profile_picture_src = response.urljoin(
+                response.css(
+                    'div.profile-dep div.profile-pic-dep img::attr(src)'
+                ).extract_first())
+
         # parse birthdate
         birthdate = ''.join(response.css('div.profile-dep div.profile-pic-dep::text').extract()).strip()
 
@@ -69,6 +75,7 @@ class Cdep(scrapy.Spider):
         personal_data_loader.add_value('name', person_name)
         personal_data_loader.add_value('birthdate', birthdate)
         personal_data_loader.add_value('url', response.url)
+        personal_data_loader.add_value('picture', profile_picture_src)
         yield personal_data_loader.load_item()
 
         # follow plenery speaking url
