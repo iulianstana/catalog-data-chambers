@@ -1,6 +1,6 @@
 # *Catalog Politic* Data Chambers
 
-![Code for Romania Logo](https://i.imgur.com/hobixRP.png)
+![Code for Romania Logo](https://code4.ro/wp-content/uploads/2016/09/Catalog-Politic-by-Code4Romania.png)
 
 This project is part of [*Catalog Politic*](https://code4.ro/en/project/catalog-politic/), an online platform that centralizes existing information about persons in public functions in Romania.
 
