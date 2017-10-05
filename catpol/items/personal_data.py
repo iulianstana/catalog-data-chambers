@@ -9,3 +9,4 @@ class PersonalDataItem(scrapy.Item):
     eurogroup = scrapy.Field()
     birthplace = scrapy.Field()
     party = scrapy.Field()
+    picture = scrapy.Field()
