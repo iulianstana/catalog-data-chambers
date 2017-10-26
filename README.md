@@ -44,7 +44,7 @@ These instructions are verified to work on the specified systems, but they do no
 
 #### legs
 
-AnlLegislative session lasts 4 years and it is represented by the year in which it began. For example, the session 2008–2016 is represented by the year 2008. You can use this command to crawl specific sessions. Defaults to 2016. For example, to crawl initiatives from the 2004 and 2008 sessions, you can do `scrapy crawl cdep -a legs='2004 2008'`.
+Aa legislative session lasts 4 years and it is represented by the year in which it began. For example, the session 2008–2016 is represented by the year 2008. You can use this command to crawl specific sessions. Defaults to 2016. For example, to crawl initiatives from the 2004 and 2008 sessions, you can do `scrapy crawl cdep -a legs='2004 2008'`.
 
 ### Spider commands (*cdep_voting*)
 
