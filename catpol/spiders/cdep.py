@@ -37,9 +37,8 @@ class Cdep(scrapy.Spider):
                 'table tbody tr td:nth-child(2) a::attr(href)')
         ).extract()
         for url in urls:
-            yield http.Reqo(
-                url=response.urljoin(url),
-                callback=self.parse_person)
+            yield http.Reqo(url=response.urljoin(url),
+                            callback=self.parse_person)
 
     def parse_person(self, response):
         """
