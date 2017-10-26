@@ -10,13 +10,13 @@ import catpol.cmdinput as cmdinput
 class Cdep(scrapy.Spider):
     name = 'cdep'
 
-    def __init__(self, after=None, years=None):
-        self.years = cmdinput.expand_years(after, years)
+    def __init__(self, legs=None):
+        self.legs = cmdinput.expand_legs_str(legs)
 
     def start_requests(self):
         urls = {
             'http://www.cdep.ro/pls/parlam/structura2015.de?leg={}'
-            .format(year) for year in self.years
+            .format(leg) for leg in self.legs
         }
         for url in urls:
             yield http.Reqo(url=url, callback=self.parse_ids)

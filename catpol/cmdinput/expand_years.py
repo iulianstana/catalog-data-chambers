@@ -1,46 +1,36 @@
 import logging
 
-def __log_error_failed_parse(years, correct):
+
+_LEGS = {2016, 2012, 2008, 2004, 2000, 1996, 1992, 1990}
+
+def __log_error_failed_parse(string):
     logger = logging.getLogger(__name__)
-    logger.error(
-        'Failed to parse {}, an year must be one of {}.'.format(years, correct)
-    )
+    logger.error('Failed to parse {string}, the available legislatures are '
+                 '{legs}.'.format(string, _LEGS))
 
-def __log_error_failed_range(year, correct):
+
+def __log_warning_failed_range(integer):
     logger = logging.getLogger(__name__)
-    logger.error(
-        '{} is not one of {}.'.format(year, correct)
-    )
+    logger.warning('{integer} is not avaialbe as a legislature. The available '
+                   'legislatures are {legs}.'.format(integer, _LEGS))
 
-def expand_years(after, years):
+
+def expand_legs_str(legs_str):
     logger = logging.getLogger(__name__)
-    all_years = {2016, 2012, 2008, 2004, 2000, 1996, 1992, 1990}
-    all_years_str = ', '.join(map(str, sorted(list(all_years))))
 
-    after_int = None
-    years_int = None
-
-    if after:
+    if legs_str:
+        requested_legs = set() 
         try:
-            after_int = int(after)
-        except:
-            _log_error_failed_parse(after, all_years)
-    if years:
-        try:
-            years_int = set(map(int, years.split()))
+            legs_int = set(map(int, 
+                               legs_str.split()))
+            for leg in legs_int:
+                if leg in _LEGS:
+                    requested_legs.add(leg)
+                else:
+                    __log_warning_failed_range(leg)
         except ValueError:
-            _log_error_failed_parse(years, all_years)
-    if years_int:
-        for year in years_int:
-            if year not in all_years:
-                __log_error_failed_range(year, all_years_str)
-        years_int = {year for year in years_int if year in all_years}
-        if after_int:
-            return {year for year in years_int if year >= after_int}
-        else:
-            return {year for year in years_int}
+            _log_error_failed_parse(legs_str)
+            raise
+        return requested_legs
     else:
-        if after_int:
-            return {year for year in all_years if year >= after_int}
-        else:
-            return all_years
+        return _LEGS
