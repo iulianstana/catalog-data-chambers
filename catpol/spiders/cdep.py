@@ -14,12 +14,12 @@ class Cdep(scrapy.Spider):
         self.legs = cmdinput.expand_legs_str(legs)
 
     def start_requests(self):
-        urls = {
-            'http://www.cdep.ro/pls/parlam/structura2015.de?leg={}'
-            .format(leg) for leg in self.legs
-        }
-        for url in urls:
-            yield http.Reqo(url=url, callback=self.parse_ids)
+        for leg in self.legs:
+            url = ('http://www.cdep.ro/pls/parlam/structura2015.de?'
+                  'leg={leg}').format(leg=leg)
+            yield http.Reqo(url=url, 
+                            callback=self.parse_ids,
+                            meta={'leg': leg})
 
     def parse_ids(self, response):
         """
@@ -38,7 +38,8 @@ class Cdep(scrapy.Spider):
         ).extract()
         for url in urls:
             yield http.Reqo(url=response.urljoin(url),
-                            callback=self.parse_person)
+                            callback=self.parse_person,
+                            meta=response.meta)
 
     def parse_person(self, response):
         """
@@ -90,6 +91,7 @@ class Cdep(scrapy.Spider):
         personal_data_loader.add_value('birthdate', birthdate)
         personal_data_loader.add_value('url', response.url)
         personal_data_loader.add_value('picture', profile_picture_src)
+        personal_data_loader.add_value('leg', response.meta['leg'])
         yield personal_data_loader.load_item()
 
         # follow plenery speaking url

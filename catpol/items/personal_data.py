@@ -10,3 +10,4 @@ class PersonalDataItem(scrapy.Item):
     birthplace = scrapy.Field()
     party = scrapy.Field()
     picture = scrapy.Field()
+    leg = scrapy.Field()
