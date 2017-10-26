@@ -22,6 +22,15 @@ class Cdep(scrapy.Spider):
             yield http.Reqo(url=url, callback=self.parse_ids)
 
     def parse_ids(self, response):
+        """
+            Example URLs:
+            - http://www.cdep.ro/pls/parlam/structura2015.de?leg=2016
+            - http://www.cdep.ro/pls/parlam/structura2015.de?leg=2012
+            - http://www.cdep.ro/pls/parlam/structura2015.de?leg=2008
+
+            Follows URLs to:
+            - person 
+        """
         urls = response.css(
             str(
                 'div.grup-parlamentar-list.grupuri-parlamentare-list '
