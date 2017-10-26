@@ -34,12 +34,18 @@ class Cdep(scrapy.Spider):
 
     def parse_person(self, response):
         """
+            Example URLs:
+            - http://www.cdep.ro/pls/parlam/structura2015.mp?idm=103&cam=2&leg=2016
+            - http://www.cdep.ro/pls/parlam/structura2015.mp?idm=92&cam=2&leg=2016
+            - http://www.cdep.ro/pls/parlam/structura2015.mp?idm=300&cam=2&leg=2016
+
             Parses data about a single person:
             - full name
             - birthdate
             - parliamentary activity summary
 
             Follows URLs to:
+            - plenery speaking
             - initiatives
         """
 
