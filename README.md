@@ -42,21 +42,9 @@ These instructions are verified to work on the specified systems, but they do no
 
 ### Spider commands (*cdep*)
 
-#### years
+#### legs
 
-An election cycle lasts 4 year and is named by the year in which it started. For example, we name the 2008–2016 cycle *the 2008 cycle*. You can use this command to crawl specific cycles.
-
-###### Example
-
-Say you want to crawl the initiatives between 2004 and 2012. This period is made up of two cycles: 2004 and 2008. To accomplish this you can use `scrapy crawl cdep -a years='2004 2008'`.
-
-#### after
-
-You can use _after_ to crawl only cycles that began in or after a given year.
-
-###### Example
-
-Say you want to crawl all the initiatives from 2012 to present, to accomplish this you can use `scrapy crawl cdep -a after=2012`.
+AnlLegislative session lasts 4 years and it is represented by the year in which it began. For example, the session 2008–2016 is represented by the year 2008. You can use this command to crawl specific sessions. Defaults to 2016. For example, to crawl initiatives from the 2004 and 2008 sessions, you can do `scrapy crawl cdep -a legs='2004 2008'`.
 
 ### Spider commands (*cdep_voting*)
 
