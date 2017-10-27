@@ -16,7 +16,7 @@ class Cdep(scrapy.Spider):
     def start_requests(self):
         for leg in self.legs:
             url = ('http://www.cdep.ro/pls/parlam/structura2015.de?'
-                  'leg={leg}').format(leg=leg)
+                   'leg={leg}').format(leg=leg)
             yield http.Reqo(url=url, 
                             callback=self.parse_ids,
                             meta={'leg': leg})
