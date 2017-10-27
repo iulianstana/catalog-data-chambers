@@ -1,5 +1,4 @@
 import scrapy
-import logging
 
 import catpol.loaders as loaders
 import catpol.items as items
@@ -8,16 +7,22 @@ import catpol.http as http
 import catpol.cmdinput as cmdinput
 
 class Cdep(scrapy.Spider):
+    """This spider crawls for:
+    - personal data
+    - initiatives
+    - plenery time
+    """
     name = 'cdep'
 
     def __init__(self, legs=None):
+        super().__init__()
         self.legs = cmdinput.expand_legs_str(legs)
 
     def start_requests(self):
         for leg in self.legs:
             url = ('http://www.cdep.ro/pls/parlam/structura2015.de?'
                    'leg={leg}').format(leg=leg)
-            yield http.Reqo(url=url, 
+            yield http.Reqo(url=url,
                             callback=self.parse_ids,
                             meta={'leg': leg})
 
@@ -29,7 +34,7 @@ class Cdep(scrapy.Spider):
         - http://www.cdep.ro/pls/parlam/structura2015.de?leg=2008
 
         Follows URLs to:
-        - person 
+        - person
         """
         urls = response.css(
             str(
@@ -64,10 +69,7 @@ class Cdep(scrapy.Spider):
         ).extract_first()
 
         # parse profile picture src
-        profile_picture_src = response.urljoin(
-                response.css(
-                    'div.profile-dep div.profile-pic-dep img::attr(src)'
-                ).extract_first())
+        profile_picture_src = response.urljoin(response.css('div.profile-dep div.profile-pic-dep img::attr(src)').extract_first())
 
         # parse birthdate
         birthdate = ''.join(response.css('div.profile-dep div.profile-pic-dep::text').extract()).strip()
@@ -173,6 +175,7 @@ class Cdep(scrapy.Spider):
             i += 1
 
     def parse_plenery_time(self, response):
+        """Parses plenery time of a person."""
         loader = loaders.PleneryTimeLoader(item=items.PleneryTimeItem(), response=response)
         loader.add_xpath('duration', '//tr/td[text()=\'total durată video:\']/following-sibling::td//text()')
         loader.add_xpath('name', '//tr/td[text()=\'vorbitor:\']/following-sibling::td//text()')
