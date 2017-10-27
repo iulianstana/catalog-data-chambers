@@ -23,13 +23,13 @@ class Cdep(scrapy.Spider):
 
     def parse_ids(self, response):
         """
-            Example URLs:
-            - http://www.cdep.ro/pls/parlam/structura2015.de?leg=2016
-            - http://www.cdep.ro/pls/parlam/structura2015.de?leg=2012
-            - http://www.cdep.ro/pls/parlam/structura2015.de?leg=2008
+        Example URLs:
+        - http://www.cdep.ro/pls/parlam/structura2015.de?leg=2016
+        - http://www.cdep.ro/pls/parlam/structura2015.de?leg=2012
+        - http://www.cdep.ro/pls/parlam/structura2015.de?leg=2008
 
-            Follows URLs to:
-            - person 
+        Follows URLs to:
+        - person 
         """
         urls = response.css(
             str(
@@ -43,19 +43,19 @@ class Cdep(scrapy.Spider):
 
     def parse_person(self, response):
         """
-            Example URLs:
-            - http://www.cdep.ro/pls/parlam/structura2015.mp?idm=103&cam=2&leg=2016
-            - http://www.cdep.ro/pls/parlam/structura2015.mp?idm=92&cam=2&leg=2016
-            - http://www.cdep.ro/pls/parlam/structura2015.mp?idm=300&cam=2&leg=2016
+        Example URLs:
+        - http://www.cdep.ro/pls/parlam/structura2015.mp?idm=103&cam=2&leg=2016
+        - http://www.cdep.ro/pls/parlam/structura2015.mp?idm=92&cam=2&leg=2016
+        - http://www.cdep.ro/pls/parlam/structura2015.mp?idm=300&cam=2&leg=2016
 
-            Parses data about a single person:
-            - full name
-            - birthdate
-            - parliamentary activity summary
+        Parses data about a single person:
+        - full name
+        - birthdate
+        - parliamentary activity summary
 
-            Follows URLs to:
-            - plenery speaking
-            - initiatives
+        Follows URLs to:
+        - plenery speaking
+        - initiatives
         """
 
         # parse person name
@@ -110,6 +110,18 @@ class Cdep(scrapy.Spider):
             callback=self.parse_initiatives)
 
     def parse_initiatives(self, response):
+        """
+        Example URLs:
+        - http://www.cdep.ro/pls/parlam/structura2015.mp?idm=103&cam=2&leg=2016&pag=2
+        - http://www.cdep.ro/pls/parlam/structura2015.mp?idm=92&cam=2&leg=2016&pag=2
+        - http://www.cdep.ro/pls/parlam/structura2015.mp?idm=300&cam=2&leg=2016&pag=2
+
+        Parses data about several initiatives:
+        - author
+        - status
+
+        Does not follow any URLs.
+        """
         author_name = response.css(
             'div.profile-dep div.boxTitle h1::text'
         ).extract_first()
