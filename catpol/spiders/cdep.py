@@ -20,8 +20,7 @@ class Cdep(scrapy.Spider):
 
     def start_requests(self):
         for leg in self.legs:
-            url = ('http://www.cdep.ro/pls/parlam/structura2015.de?'
-                   'leg={leg}').format(leg=leg)
+            url = 'http://www.cdep.ro/pls/parlam/structura2015.de?leg={leg}'.format(leg=leg)
             yield http.Reqo(url=url,
                             callback=self.parse_ids,
                             meta={'leg': leg})
@@ -36,11 +35,7 @@ class Cdep(scrapy.Spider):
         Follows URLs to:
         - person
         """
-        urls = response.css(
-            str(
-                'div.grup-parlamentar-list.grupuri-parlamentare-list '
-                'table tbody tr td:nth-child(2) a::attr(href)')
-        ).extract()
+        urls = response.css('div.grup-parlamentar-list.grupuri-parlamentare-list table tbody tr td:nth-child(2) a::attr(href)').extract()
         for url in urls:
             yield http.Reqo(url=response.urljoin(url),
                             callback=self.parse_person,
