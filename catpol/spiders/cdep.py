@@ -133,36 +133,25 @@ class Cdep(scrapy.Spider):
             status_loader = loaders.StatusLoader(items.StatusItem())
             if cdep[i].xpath('.//a/@href').extract_first():
                 status_cdep_loader = loaders.LinkLoader(items.LinkItem())
-                status_cdep_loader.add_value(
-                    'title',
-                    cdep[i].xpath('.//text()').extract_first())
-                status_cdep_loader.add_value(
-                    'href',
-                    response.urljoin(
-                        cdep[i].xpath('.//a/@href').extract_first()))
-                status_loader.add_value(
-                    'cdep',
-                    dict(status_cdep_loader.load_item()))
+                status_cdep_loader.add_value('title',
+                                             cdep[i].xpath('.//text()').extract_first())
+                status_cdep_loader.add_value('href',
+                                             response.urljoin(cdep[i].xpath('.//a/@href').extract_first()))
+                status_loader.add_value('cdep',
+                                        dict(status_cdep_loader.load_item()))
             if senat[i].xpath('.//a/@href').extract_first():
                 status_senat_loader = loaders.LinkLoader(items.LinkItem())
-                status_senat_loader.add_value(
-                    'title',
-                    senat[i].xpath('.//text()').extract_first())
-                status_senat_loader.add_value(
-                    'href',
-                    response.urljoin(
-                        senat[i].xpath('.//a/@href').extract_first()))
-                status_loader.add_value(
-                    'senat',
-                    dict(status_senat_loader.load_item()))
-            status_loader.add_value(
-                'status',
-                ' '.join(status[i].xpath('.//text()').extract())
-            )
+                status_senat_loader.add_value('title',
+                                              senat[i].xpath('.//text()').extract_first())
+                status_senat_loader.add_value('href',
+                                              response.urljoin(senat[i].xpath('.//a/@href').extract_first()))
+                status_loader.add_value('senat',
+                                        dict(status_senat_loader.load_item()))
+            status_loader.add_value('status',
+                                    ' '.join(status[i].xpath('.//text()').extract()))
             loader = loaders.InitiativeLoader(items.InitiativeItem())
-            loader.add_value(
-                'title',
-                title[i].xpath('.//text()').extract_first())
+            loader.add_value('title',
+                             title[i].xpath('.//text()').extract_first())
             loader.add_value('author', author_name)
             loader.add_value('status', dict(status_loader.load_item()))
             loader.add_value('url', response.url)
