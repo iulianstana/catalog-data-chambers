@@ -6,3 +6,4 @@ from catpol.items.plenerytime import *
 from catpol.items.county import *
 from catpol.items.voting import *
 from catpol.items.votes import *
+from catpol.items.circ import *
