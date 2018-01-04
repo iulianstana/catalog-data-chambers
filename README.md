@@ -34,7 +34,7 @@ The following should be common:
 3. `virtualenv -p python3 cdc_env`
 4. `source cdc_env/bin/activate`
 5. `pip install -r requirements.txt`
-6. `scrapy crawl cdep -a years=2016 -o 2016.json`
+6. `scrapy crawl cdep -a legs=2016 -o 2016.json`
 
 These instructions are verified to work on the specified systems, but they do not have to be exacuted as given. You can customize your setup to suit your needs.
 
