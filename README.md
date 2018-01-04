@@ -70,6 +70,22 @@ Day to crawl.
 
 `scrapy crawl cdep_voting -a after=2006`
 
+### Spider commands (*euro*)
+
+This command will crawl the Romanian members of the European Parliament. The information crawled consists of the members that are in function at the time the command is run, there is currently no input parameters to crawl information about past members.
+
+#### Example
+
+`scrapy crawl euro -o 2016_eu.json`
+
+### Spider commands (*circ*)
+
+This command will crawl and dump the information about the political parties of the members of the CDEP. The crawl command is similar to the cdep command, it requires the legs as input parameters.
+
+#### Example
+
+`scrapy crawl circ -a legs=2016 -o 2016_eu.json`
+
 ### Testing commands
 
 If you want to make sure the spider still yields the same values and request on our set of input data, you can run `scrapy test`.
