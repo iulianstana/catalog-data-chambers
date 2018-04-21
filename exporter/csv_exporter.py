@@ -15,6 +15,18 @@ POLITICIAN_NAME = 'name'
 FORMATIONS_FIELD = 'formations'
 LEGISLATION_FIELD = 'leg'
 
+ELECTION_DATES = {
+    1990: [(1990, 5), (1992, 9)],
+    1992: [(1992, 9), (1996, 11)],
+    1996: [(1996, 11), (2000, 11)],
+    2000: [(2000, 11), (2004, 11)],
+    2004: [(2004, 11), (2008, 11)],
+    2008: [(2008, 11), (2012, 11)],
+    2012: [(2012, 12), (2016, 12)],
+    2016: [(2016, 12), (2018, 12)] # hardcoded cause no better ideea
+}
+
+
 def get_politicians_names(politicians_collection):
     politicians = set()
 
@@ -50,15 +62,14 @@ def parse_date_format(date_format):
     return date_type, year, get_month_number(month)
 
 
-def get_legislation_end_date(legislation):
-    now = datetime.datetime.now()
-
-    if legislation + 4 > now.year:
-        to_year, to_month = now.year, now.month
+def get_legislation_date(legislation, start=False):
+    if start:
+        year, month = ELECTION_DATES[int(legislation)][0]
     else:
-        to_year, to_month = legislation + 4, 12
+        year, month = ELECTION_DATES[int(legislation)][1]
 
-    return to_year, to_month
+    return year, month
+
 
 def parse_political_teams(political_doc, politician_name, aggregated_data):
     legislation = political_doc[LEGISLATION_FIELD]
@@ -75,16 +86,16 @@ def parse_political_teams(political_doc, politician_name, aggregated_data):
                 # If we have a start date or an end date
                 type, year, month = parse_date_format(formation_period[0])
                 if type == 0:
-                    from_year, from_month = legislation, 1
+                    from_year, from_month = get_legislation_date(legislation, start=True)
                     to_year, to_month = year, month
                 else:
                     from_year, from_month = year, month
-                    to_year, to_month = get_legislation_end_date(legislation)
+                    to_year, to_month = get_legislation_date(legislation)
             else:
                 # If we have only one political formation the entire legislation interval
-                from_year, from_month = legislation, 1
-                to_year, to_month = get_legislation_end_date(legislation)
-            print(politician_name)
+                from_year, from_month = get_legislation_date(legislation, start=True)
+                to_year, to_month = get_legislation_date(legislation)
+
             aggregated_data.append((politician_name,
                                     int(from_year),
                                     int(from_month),
@@ -124,10 +135,27 @@ def write_csv_results(filename, data):
                 writer.writerow(political_period)
 
 
+def save_to_visualisation_db(db, data):
+    collection = db['visualise_data']
+    for politician in data.keys():
+        doc = {'name': politician, 'activity': []}
+        for activity in data[politician]:
+            doc['activity'].append({'since':
+                                        {'year': activity[1],
+                                         'month': activity[2]},
+                                    'until':
+                                        {'year': activity[5],
+                                         'month': activity[6]},
+                                    'formation': activity[3],
+                                    })
+        collection.insert_one(doc)
+
+
 if __name__ == '__main__':
 
     client = MongoClient('localhost', 27017)
     db = client['catalog']
     data = parse(db)
 
-    write_csv_results("test.csv", data)
+    # save_to_visualisation_db(db, data)
+    # write_csv_results("test.csv", data)
