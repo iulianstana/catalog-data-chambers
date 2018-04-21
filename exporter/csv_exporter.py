@@ -9,17 +9,18 @@ HOST = 'localhost'
 PORT = '27017'
 
 
-MONTHS = ['ian', 'feb', 'mart', 'apr', 'mai', 'iun', 'iul', 'aug', 'sept', 'oct', 'nov', 'dec']
+MONTHS = ['ian', 'feb', 'mar', 'apr', 'mai', 'iun', 'iul', 'aug', 'sep', 'oct', 'noi', 'dec']
 
 POLITICIAN_NAME = 'name'
-TEAMS_FIELD = 'formatiune'
-LEGISLATION_FIELD = 'legislatie'
+FORMATIONS_FIELD = 'formations'
+LEGISLATION_FIELD = 'leg'
 
 def get_politicians_names(politicians_collection):
     politicians = set()
 
     for politician_entry in politicians_collection.find({}):
-        politicians.add(politician_entry['POLITICIAN_NAME'])
+        if politician_entry.get(POLITICIAN_NAME):
+            politicians.add(politician_entry[POLITICIAN_NAME])
 
     return politicians
 
@@ -37,8 +38,7 @@ def parse_date_format(date_format):
     for identifier in date_identifiers:
         if identifier in date_format:
             date_format_shorted = date_format[date_format.index(identifier) + len(identifier):].strip()
-    print(date_format_shorted)
-    print(date_format_shorted.split(' '))
+
     month, year = [item.strip() for item in date_format_shorted.split(' ')[-2:]]
 
     # Remove dot from month, if it has
@@ -52,17 +52,19 @@ def parse_date_format(date_format):
 
 def get_legislation_end_date(legislation):
     now = datetime.datetime.now()
+
     if legislation + 4 > now.year:
-        to_year, to_month = '-', '-'
+        to_year, to_month = now.year, now.month
     else:
-        to_year, to_month = legislation + 4, 1
+        to_year, to_month = legislation + 4, 12
+
+    return to_year, to_month
 
 def parse_political_teams(political_doc, politician_name, aggregated_data):
     legislation = political_doc[LEGISLATION_FIELD]
-    constituency = political_doc['circu']
-    last_timestamp = datetime.datetime(legislation, 1, 1, tzinfo=timezone.utc)
+    # constituency = political_doc['circu']
 
-    for formation in political_doc['formation'].keys():
+    for formation in political_doc[FORMATIONS_FIELD].keys():
         political_formation_entries = political_doc['formations'][formation]
         for formation_period in political_formation_entries:
             if len(formation_period) == 2:
@@ -82,14 +84,14 @@ def parse_political_teams(political_doc, politician_name, aggregated_data):
                 # If we have only one political formation the entire legislation interval
                 from_year, from_month = legislation, 1
                 to_year, to_month = get_legislation_end_date(legislation)
-
+            print(politician_name)
             aggregated_data.append((politician_name,
-                                    from_year,
-                                    from_month,
+                                    int(from_year),
+                                    int(from_month),
                                     formation,
-                                    constituency,
-                                    to_year,
-                                    to_month
+                                    '',
+                                    int(to_year),
+                                    int(to_month)
                                     ))
 
 
@@ -97,14 +99,20 @@ def aggregate_legislations_for_politician(politicians_collection, politician_nam
     aggregated_data = []
 
     for legislation_doc in politicians_collection.find({"name": politician_name}):
-        parse_political_teams(legislation_doc, politician_name, aggregated_data)
+        if legislation_doc.get(FORMATIONS_FIELD):
+            parse_political_teams(legislation_doc, politician_name, aggregated_data)
 
-#     Sort data
+    # Sort data
+    aggregated_data = sorted(aggregated_data, key=lambda agg_data: datetime.datetime(year=agg_data[1], month=agg_data[2], day=1))
+
+    return aggregated_data
+
 
 def parse(db):
-    collection = db['collection_default']
+    collection = db['default_collection']
     politicians_names = get_politicians_names(collection)
-    data = {politician_name: aggregate_legislations_for_politician(collection, politician_name) for politician_name in politicians_names}
+
+    return {politician_name: aggregate_legislations_for_politician(collection, politician_name) for politician_name in politicians_names}
 
 
 def write_csv_results(filename, data):
@@ -118,8 +126,8 @@ def write_csv_results(filename, data):
 
 if __name__ == '__main__':
 
-    # client = MongoClient('localhost', 27017)
-    # db = client['catalog']
-    # data = parse(db)
+    client = MongoClient('localhost', 27017)
+    db = client['catalog']
+    data = parse(db)
 
-    # write_csv_results("test.csv", {"ana": [("1213", "2121", "partid", "mures"), ("1213", "2121", "partid", "mures")]})
+    write_csv_results("test.csv", data)
