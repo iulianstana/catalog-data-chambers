@@ -9,6 +9,6 @@ COMMANDS_MODULE = 'catpol.commands'
 
 ITEM_PIPELINES = {'catpol.pipelines.MongoDBPipeline': 300}
 
-# MONGODB_URI = 'mongodb://user:pass@host:port/db?authSource=admin'
-# MONGODB_COLLECTION = 'default_collection'
-# MONGODB_COLLECTION_ITEM_BRANCH = {'item_type': 'collection'}
+MONGODB_URI = 'mongodb://localhost/catalog'
+MONGODB_COLLECTION = 'default_collection'
+MONGODB_COLLECTION_ITEM_BRANCH = {'item_type': 'collection'}
