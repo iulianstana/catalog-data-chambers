@@ -30,20 +30,20 @@ def not_found(error):
 
 
 def make_public_item(item):
-    return {'name': item['name'], 'formations': item['formations']}
+    return {'name': item['name'], 'acitivity': item['activity']}
 
 
 def get_items_from_database(name):
     # get a database connection
-    db = connect_database(server="mongo",
+    db = connect_database(server="localhost",
                           port=27017,
-                          database_name='db')
+                          database_name='catalog')
 
     items = []
     search_field = {"name": name}
 
     try:
-        for item in db.default_collection.find(search_field):
+        for item in db['visualise_data'].find(search_field):
             items.append(make_public_item(item))
 
     except AttributeError as exp:

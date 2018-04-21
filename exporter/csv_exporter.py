@@ -157,5 +157,5 @@ if __name__ == '__main__':
     db = client['catalog']
     data = parse(db)
 
-    # save_to_visualisation_db(db, data)
-    # write_csv_results("test.csv", data)
+    write_csv_results("test.csv", data)
+    save_to_visualisation_db(db, data)
