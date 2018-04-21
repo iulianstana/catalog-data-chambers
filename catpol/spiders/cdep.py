@@ -6,6 +6,7 @@ import catpol.http as http
 
 import catpol.cmdinput as cmdinput
 
+
 class Cdep(scrapy.Spider):
     """This spider crawls for:
     - personal data
@@ -70,19 +71,9 @@ class Cdep(scrapy.Spider):
         birthdate = ''.join(response.css('div.profile-dep div.profile-pic-dep::text').extract()).strip()
 
         # parse parliamentary activity summary
-        div_text = 'Activitatea parlamentara în cifre'
-        activity_rows = response.xpath(
-            '//text()[contains(.,\'{}\')]/../../table/tr'.format(div_text)
-        )
+        activity_dict = self.parse_activity(response)
+
         personal_data_loader = loaders.PersonalDataLoader(items.PersonalDataItem())
-        activity_dict = dict()
-        for row in activity_rows:
-            columns = row.xpath('.//td')
-            if len(columns) == 2:
-                key = ''.join(columns[0].xpath(
-                    './/text()').extract()).strip(':')
-                value = ''.join(columns[1].xpath('.//text()').extract())
-                activity_dict[key] = value
         personal_data_loader.add_value('activity', activity_dict)
         personal_data_loader.add_value('name', person_name)
         personal_data_loader.add_value('birthdate', birthdate)
@@ -100,8 +91,7 @@ class Cdep(scrapy.Spider):
             callback=self.parse_plenery_time)
 
         # follow initiatives url
-        url = response.xpath(
-            '//a[text()=\'Initiative legislative\']/@href').extract_first()
+        url = response.xpath('//a[text()=\'Initiative legislative\']/@href').extract_first()
         yield http.Reqo(
             url=response.urljoin(url),
             callback=self.parse_initiatives)
@@ -165,3 +155,19 @@ class Cdep(scrapy.Spider):
         loader.add_xpath('name', '//tr/td[text()=\'vorbitor:\']/following-sibling::td//text()')
         loader.add_value('url', response.url)
         yield loader.load_item()
+
+    def parse_activity(self, response):
+        """Parse parliamentary activity summary."""
+        div_text = 'Activitatea parlamentara în cifre'
+        activity_rows = response.xpath(
+            '//text()[contains(.,\'{}\')]/../../table/tr'.format(div_text)
+        )
+        activity_dict = dict()
+        for row in activity_rows:
+            columns = row.xpath('.//td')
+            if len(columns) == 2:
+                key = ''.join(columns[0].xpath(
+                    './/text()').extract()).strip(':')
+                value = ''.join(columns[1].xpath('.//text()').extract())
+                activity_dict[key] = value
+        return activity_dict
