@@ -86,7 +86,7 @@ class Cdep(scrapy.Spider):
         personal_data_loader.add_value('url', response.url)
         personal_data_loader.add_value('picture', profile_picture_src)
         personal_data_loader.add_value('leg', response.meta['leg'])
-        personal_data_loader.add_value('formation', political_party_dict)
+        personal_data_loader.add_value('formations', political_party_dict)
         yield personal_data_loader.load_item()
 
         # follow plenery speaking url
