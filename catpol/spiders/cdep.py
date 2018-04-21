@@ -1,3 +1,4 @@
+from collections import defaultdict
 import scrapy
 
 import catpol.loaders as loaders
@@ -6,11 +7,13 @@ import catpol.http as http
 
 import catpol.cmdinput as cmdinput
 
+
 class Cdep(scrapy.Spider):
     """This spider crawls for:
     - personal data
     - initiatives
     - plenery time
+    - party migration
     """
     name = 'cdep'
 
@@ -52,6 +55,7 @@ class Cdep(scrapy.Spider):
         - full name
         - birthdate
         - parliamentary activity summary
+        - politial party migration
 
         Follows URLs to:
         - plenery speaking
@@ -70,25 +74,19 @@ class Cdep(scrapy.Spider):
         birthdate = ''.join(response.css('div.profile-dep div.profile-pic-dep::text').extract()).strip()
 
         # parse parliamentary activity summary
-        div_text = 'Activitatea parlamentara în cifre'
-        activity_rows = response.xpath(
-            '//text()[contains(.,\'{}\')]/../../table/tr'.format(div_text)
-        )
+        activity_dict = self.parse_activity(response)
+
+        # parse parliamentary political party
+        political_party_dict = self.parse_political_party(response)
+
         personal_data_loader = loaders.PersonalDataLoader(items.PersonalDataItem())
-        activity_dict = dict()
-        for row in activity_rows:
-            columns = row.xpath('.//td')
-            if len(columns) == 2:
-                key = ''.join(columns[0].xpath(
-                    './/text()').extract()).strip(':')
-                value = ''.join(columns[1].xpath('.//text()').extract())
-                activity_dict[key] = value
         personal_data_loader.add_value('activity', activity_dict)
         personal_data_loader.add_value('name', person_name)
         personal_data_loader.add_value('birthdate', birthdate)
         personal_data_loader.add_value('url', response.url)
         personal_data_loader.add_value('picture', profile_picture_src)
         personal_data_loader.add_value('leg', response.meta['leg'])
+        personal_data_loader.add_value('formations', political_party_dict)
         yield personal_data_loader.load_item()
 
         # follow plenery speaking url
@@ -100,8 +98,7 @@ class Cdep(scrapy.Spider):
             callback=self.parse_plenery_time)
 
         # follow initiatives url
-        url = response.xpath(
-            '//a[text()=\'Initiative legislative\']/@href').extract_first()
+        url = response.xpath('//a[text()=\'Initiative legislative\']/@href').extract_first()
         yield http.Reqo(
             url=response.urljoin(url),
             callback=self.parse_initiatives)
@@ -165,3 +162,65 @@ class Cdep(scrapy.Spider):
         loader.add_xpath('name', '//tr/td[text()=\'vorbitor:\']/following-sibling::td//text()')
         loader.add_value('url', response.url)
         yield loader.load_item()
+
+    def parse_activity(self, response):
+        """Parse parliamentary activity summary."""
+        div_text = 'Activitatea parlamentara în cifre'
+        activity_rows = response.xpath(
+            '//text()[contains(.,\'{}\')]/../../table/tr'.format(div_text)
+        )
+        activity_dict = dict()
+        for row in activity_rows:
+            columns = row.xpath('.//td')
+            if len(columns) == 2:
+                key = ''.join(columns[0].xpath(
+                    './/text()').extract()).strip(':')
+                value = ''.join(columns[1].xpath('.//text()').extract())
+                activity_dict[key] = value
+        return activity_dict
+
+    def parse_political_party(self, response):
+        """Parse political party affiliation period.
+
+        Return a dictionary of politician political parties, example:
+        Multiple political parties {
+            "PP-DD": [[" - până în  iun. 2014"]],
+            "UNPR": [[" - din  iun. 2014"]]
+        }
+        Multiple times in a party: {
+            "PP-DD": [[" - până în  apr. 2013"]],
+            "independent": [[" - din  apr. 2013", " - până în  oct. 2013"], [" - din  noi. 2016"]],
+            "UNPR": [[" - din  oct. 2013", " - până în  noi. 2016"]]}
+        }
+        A single party: {
+            "PNL": [[]]
+        }
+
+        Member could be part of the same party in different periods. For this reason, each party has a list of lists.
+        """
+        PARTY_COLUMN = 2
+        PARTY_PERIOD_COLUMN = 5
+        INDEPENDENT_PERIOD_COLUMN = 4
+
+        div_text = 'Formatiunea politica'
+        political_party_rows = response.xpath(
+            '//text()[contains(.,\'{}\')]/../../table/tr'.format(div_text)
+        )
+
+        political_party_dict = defaultdict(list)
+        # save each political affiliation in a dictionary format
+        for row in political_party_rows:
+            columns = row.xpath('.//td')
+
+            party = ''.join(columns[PARTY_COLUMN].xpath('.//text()').extract())
+            # Check if politician was in a single party this legislation
+            if len(political_party_rows) > 1:
+                # Get leg period for independent member
+                if party == 'independent':
+                    period = columns[INDEPENDENT_PERIOD_COLUMN].xpath('.//text()').extract()
+                else:
+                    period = columns[PARTY_PERIOD_COLUMN].xpath('.//text()').extract()
+            else:
+                period = []
+            political_party_dict[party].append(period)
+        return political_party_dict
