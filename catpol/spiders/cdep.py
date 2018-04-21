@@ -1,3 +1,4 @@
+from collections import defaultdict
 import scrapy
 
 import catpol.loaders as loaders
@@ -73,6 +74,9 @@ class Cdep(scrapy.Spider):
         # parse parliamentary activity summary
         activity_dict = self.parse_activity(response)
 
+        # parse parliamentary political party
+        political_party_dict = self.parse_political_party(response)
+
         personal_data_loader = loaders.PersonalDataLoader(items.PersonalDataItem())
         personal_data_loader.add_value('activity', activity_dict)
         personal_data_loader.add_value('name', person_name)
@@ -80,6 +84,7 @@ class Cdep(scrapy.Spider):
         personal_data_loader.add_value('url', response.url)
         personal_data_loader.add_value('picture', profile_picture_src)
         personal_data_loader.add_value('leg', response.meta['leg'])
+        personal_data_loader.add_value('formation', political_party_dict)
         yield personal_data_loader.load_item()
 
         # follow plenery speaking url
@@ -171,3 +176,23 @@ class Cdep(scrapy.Spider):
                 value = ''.join(columns[1].xpath('.//text()').extract())
                 activity_dict[key] = value
         return activity_dict
+
+    def parse_political_party(self, response):
+        """Parse political party affiliation period."""
+        PARTY_COLUMN = 2
+        PERIOD_COLUMN = 4
+
+        div_text = 'Formatiunea politica'
+        political_party_rows = response.xpath(
+            '//text()[contains(.,\'{}\')]/../../table/tr'.format(div_text)
+        )
+
+        political_party_dict = defaultdict(list)
+        # save each political affiliation in a dictionary format
+        for row in political_party_rows:
+            columns = row.xpath('.//td')
+
+            party = ''.join(columns[PARTY_COLUMN].xpath('.//text()').extract())
+            period = columns[len(columns) - 1].xpath('.//text()').extract() if len(columns) > PERIOD_COLUMN else ''
+            political_party_dict[party].append(period)
+        return political_party_dict
