@@ -13,6 +13,7 @@ class Cdep(scrapy.Spider):
     - personal data
     - initiatives
     - plenery time
+    - party migration
     """
     name = 'cdep'
 
@@ -54,6 +55,7 @@ class Cdep(scrapy.Spider):
         - full name
         - birthdate
         - parliamentary activity summary
+        - politial party migration
 
         Follows URLs to:
         - plenery speaking
@@ -178,7 +180,24 @@ class Cdep(scrapy.Spider):
         return activity_dict
 
     def parse_political_party(self, response):
-        """Parse political party affiliation period."""
+        """Parse political party affiliation period.
+
+        Return a dictionary of politician political parties, example:
+        Multiple political parties {
+            "PP-DD": [[" - până în  iun. 2014"]],
+            "UNPR": [[" - din  iun. 2014"]]
+        }
+        Multiple times in a party: {
+            "PP-DD": [[" - până în  apr. 2013"]],
+            "independent": [[" - din  apr. 2013", " - până în  oct. 2013"], [" - din  noi. 2016"]],
+            "UNPR": [[" - din  oct. 2013", " - până în  noi. 2016"]]}
+        }
+        A single party: {
+            "PNL": [[]]
+        }
+
+        Member could be part of the same party in different periods. For this reason, each party has a list of lists.
+        """
         PARTY_COLUMN = 2
         PARTY_PERIOD_COLUMN = 5
         INDEPENDENT_PERIOD_COLUMN = 4
