@@ -180,7 +180,8 @@ class Cdep(scrapy.Spider):
     def parse_political_party(self, response):
         """Parse political party affiliation period."""
         PARTY_COLUMN = 2
-        PERIOD_COLUMN = 4
+        PARTY_PERIOD_COLUMN = 5
+        INDEPENDENT_PERIOD_COLUMN = 4
 
         div_text = 'Formatiunea politica'
         political_party_rows = response.xpath(
@@ -193,6 +194,14 @@ class Cdep(scrapy.Spider):
             columns = row.xpath('.//td')
 
             party = ''.join(columns[PARTY_COLUMN].xpath('.//text()').extract())
-            period = columns[len(columns) - 1].xpath('.//text()').extract() if len(columns) > PERIOD_COLUMN else ''
+            # Check if politician was in a single party this legislation
+            if len(political_party_rows) > 1:
+                # Get leg period for independent member
+                if party == 'independent':
+                    period = columns[INDEPENDENT_PERIOD_COLUMN].xpath('.//text()').extract()
+                else:
+                    period = columns[PARTY_PERIOD_COLUMN].xpath('.//text()').extract()
+            else:
+                period = []
             political_party_dict[party].append(period)
         return political_party_dict
