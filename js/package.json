@@ -1,0 +1,18 @@
+{
+  "name": "party-membership-timeline",
+  "version": "1.0.0",
+  "description": "Party membership timeline visualization",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack index.js build/bundle.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "express": "^4.13.3",
+    "webpack": "^1.12.9"
+  },
+  "dependencies": {
+    "d3kit-timeline": "^2.0.1"
+  }
+}

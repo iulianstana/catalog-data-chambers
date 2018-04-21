@@ -217,7 +217,10 @@ class Cdep(scrapy.Spider):
             if len(political_party_rows) > 1:
                 # Get leg period for independent member
                 if party == 'independent':
-                    period = columns[INDEPENDENT_PERIOD_COLUMN].xpath('.//text()').extract()
+                    try:
+                        period = columns[INDEPENDENT_PERIOD_COLUMN].xpath('.//text()').extract()
+                    except Exception as _:
+                        continue
                 else:
                     period = columns[PARTY_PERIOD_COLUMN].xpath('.//text()').extract()
             else:
