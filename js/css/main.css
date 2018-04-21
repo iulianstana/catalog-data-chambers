@@ -1,0 +1,43 @@
+body{
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  text-align: center;
+  background-color: #eee;
+}
+
+#name {
+  font-size: 18px;
+  text-align: center;
+  padding: 10px;
+  background-color: #eee;
+  border-bottom: 1px solid #ccc;
+}
+
+#chart-timeline {
+  text-align: center;
+  padding: 10px;
+}
+
+.axis path{
+  fill: none;
+  stroke-width: 2px;
+  stroke: #222;
+}
+
+.axis line{
+  fill: none;
+  stroke-width: 1px;
+  stroke: #222;
+}
+
+.axis text{
+  font-size: 14px;
+}
+
+path.link{
+  stroke-width: 3px;
+  opacity: 0.6;
+}
+
+text.label-text{
+  font-size: 18px;
+}
