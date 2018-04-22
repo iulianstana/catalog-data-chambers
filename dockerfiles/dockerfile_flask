@@ -5,6 +5,7 @@ FROM python:3.6
 # run configuration
 RUN pip install Flask==0.11.1
 RUN pip install pymongo==3.3.0
+RUN pip install flask-cors
 
 # copy my code to the container
 ADD . /opt/flask_server
