@@ -6,7 +6,7 @@ from pytz import utc, timezone
 from pymongo import MongoClient
 
 HOST = 'localhost'
-PORT = '27017'
+PORT = '28000'
 
 
 MONTHS = ['ian', 'feb', 'mar', 'apr', 'mai', 'iun', 'iul', 'aug', 'sep', 'oct', 'noi', 'dec']
@@ -153,7 +153,7 @@ def save_to_visualisation_db(db, data):
 
 if __name__ == '__main__':
 
-    client = MongoClient('localhost', 27017)
+    client = MongoClient(HOST, int(PORT))
     db = client['catalog']
     data = parse(db)
 
