@@ -1,11 +1,11 @@
 var config = {
-  default: {
-    data_service: {
-      host: 'localhost',
-      port: 8080,
-      path: '/data'
-    },
-  }
+    default: {
+        data_service: {
+            host: 'localhost',
+            port: 5005,
+            path: '/items'
+        },
+    }
 }
 
 module.exports.getEnvironment = function() {
