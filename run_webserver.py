@@ -2,12 +2,13 @@ from flask import Flask, jsonify
 from flask import request
 from flask import abort
 from flask import make_response
+from flask_cors import CORS
 
 from pymongo import MongoClient
 from pymongo.errors import ServerSelectionTimeoutError
 
 app = Flask(__name__)
-
+cors = CORS(app, resources={r"/items/*": {"origins": "*"}})
 
 def connect_database(server, port, database_name):
     result = None
@@ -35,7 +36,7 @@ def make_public_item(item):
 
 def get_items_from_database(name):
     # get a database connection
-    db = connect_database(server="localhost",
+    db = connect_database(server="mongo",
                           port=27017,
                           database_name='catalog')
 
