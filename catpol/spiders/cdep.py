@@ -77,7 +77,7 @@ class Cdep(scrapy.Spider):
         activity_dict = self.parse_activity(response)
 
         # parse parliamentary political party
-        political_party_dict = self.parse_political_party(response)
+        political_party_dict, constituency = self.parse_political_party_and_constituency(response)
 
         personal_data_loader = loaders.PersonalDataLoader(items.PersonalDataItem())
         personal_data_loader.add_value('activity', activity_dict)
@@ -87,6 +87,7 @@ class Cdep(scrapy.Spider):
         personal_data_loader.add_value('picture', profile_picture_src)
         personal_data_loader.add_value('leg', response.meta['leg'])
         personal_data_loader.add_value('formations', political_party_dict)
+        personal_data_loader.add_value('constituency', constituency)
         yield personal_data_loader.load_item()
 
         # follow plenery speaking url
@@ -179,10 +180,10 @@ class Cdep(scrapy.Spider):
                 activity_dict[key] = value
         return activity_dict
 
-    def parse_political_party(self, response):
+    def parse_political_party_and_constituency(self, response):
         """Parse political party affiliation period.
 
-        Return a dictionary of politician political parties, example:
+        Return a dictionary of politician political parties and region, example:
         Multiple political parties {
             "PP-DD": [[" - până în  iun. 2014"]],
             "UNPR": [[" - din  iun. 2014"]]
@@ -202,6 +203,7 @@ class Cdep(scrapy.Spider):
         PARTY_PERIOD_COLUMN = 5
         INDEPENDENT_PERIOD_COLUMN = 4
 
+        constituency = None
         div_text = 'Formatiunea politica'
         political_party_rows = response.xpath(
             '//text()[contains(.,\'{}\')]/../../table/tr'.format(div_text)
@@ -226,4 +228,13 @@ class Cdep(scrapy.Spider):
             else:
                 period = []
             political_party_dict[party].append(period)
-        return political_party_dict
+
+        if len(political_party_dict):
+            constituency_element = response.xpath('//div/p[text()[contains(.,"circumscriptia electorala")]]/a/text()')
+            if constituency_element:
+                constituency = constituency_element[0].extract()
+            else:
+                print(constituency_element)
+                print(response.url)
+
+        return political_party_dict, constituency

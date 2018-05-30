@@ -6,7 +6,7 @@ from pytz import utc, timezone
 from pymongo import MongoClient
 
 HOST = 'localhost'
-PORT = '28000'
+PORT = '27017'
 
 
 MONTHS = ['ian', 'feb', 'mar', 'apr', 'mai', 'iun', 'iul', 'aug', 'sep', 'oct', 'noi', 'dec']
@@ -73,7 +73,6 @@ def get_legislation_date(legislation, start=False):
 
 def parse_political_teams(political_doc, politician_name, aggregated_data):
     legislation = political_doc[LEGISLATION_FIELD]
-    # constituency = political_doc['circu']
 
     for formation in political_doc[FORMATIONS_FIELD].keys():
         political_formation_entries = political_doc['formations'][formation]
@@ -120,7 +119,7 @@ def aggregate_legislations_for_politician(politicians_collection, politician_nam
 
 
 def parse(db):
-    collection = db['default_collection']
+    collection = db['raw_parsed_data']
     politicians_names = get_politicians_names(collection)
 
     return {politician_name: aggregate_legislations_for_politician(collection, politician_name) for politician_name in politicians_names}
